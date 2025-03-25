@@ -27,5 +27,20 @@ def dataloader(dataset, input_size, batch_size, split='train'):
         data_loader = DataLoader(
             datasets.LSUN('data/lsun', classes=['bedroom_train'], transform=transform),
             batch_size=batch_size, shuffle=True)
+    elif dataset == 'scm':
+        A_images =  torch.load("/content/dagshub-drive/dagshub_storage/ss/image_dataset.pt",weights_only =False)  
+        B_images =  torch.load("/content/dagshub-drive/dagshub_storage/bin/train_datasetB.pt",weights_only =False)
+        A_data_tensor = A_images.tensors[0]
+        B_data_tensor = B_images.tensors[0]
 
-    return data_loader
+        dataset = torch.utils.data.TensorDataset(B_data_tensor, A_data_tensor) 
+
+    
+        loader = DataLoader(
+            dataset,
+            batch_size=BATCH_SIZE,
+            shuffle=True,
+            num_workers=NUM_WORKERS,
+            pin_memory=True,
+        )
+    return loader
